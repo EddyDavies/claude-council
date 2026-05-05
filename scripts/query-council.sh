@@ -49,6 +49,7 @@ EOF
 FILTER_PROVIDERS=""
 PROMPT=""
 LIST_AVAILABLE=false
+LIST_ROLES=false
 USE_CACHE=true
 ROLES=""
 DEBATE_MODE=false
@@ -125,6 +126,10 @@ while [[ $# -gt 0 ]]; do
             LIST_AVAILABLE=true
             shift
             ;;
+        --list-roles)
+            LIST_ROLES=true
+            shift
+            ;;
         --prompt=*)
             PROMPT="${1#*=}"
             shift
@@ -166,6 +171,12 @@ if [[ "$LIST_AVAILABLE" == true ]]; then
     [[ -n "${GROK_API_KEY:-}" ]] && available+=("grok")
     [[ -n "${PERPLEXITY_API_KEY:-}" ]] && available+=("perplexity")
     echo "${available[*]}"
+    exit 0
+fi
+
+# Handle --list-roles flag (used by local-execution skill)
+if [[ "$LIST_ROLES" == true ]]; then
+    list_roles
     exit 0
 fi
 
@@ -239,8 +250,11 @@ else
 fi
 
 if [[ ${#PROVIDERS[@]} -eq 0 ]]; then
-    echo "Error: No providers configured. Set API keys for at least one provider." >&2
+    echo "Error: No providers configured. Set API keys for at least one provider:" >&2
     echo "  GEMINI_API_KEY, OPENAI_API_KEY, XAI_API_KEY (or GROK_API_KEY), or PERPLEXITY_API_KEY" >&2
+    echo "" >&2
+    echo "Or run /claude-council:ask --local to use a local Claude-subagent council" >&2
+    echo "(role-based, single-model — no vendor keys required)." >&2
     exit 1
 fi
 

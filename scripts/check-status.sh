@@ -134,6 +134,9 @@ format_status "🔳" "$WHITE" "OpenAI" "$openai_status"
 format_status "🟥" "$RED" "Grok" "$grok_status"
 format_status "🟩" "$GREEN" "Perplexity" "$perplexity_status"
 
+# Local council (always available — uses Claude subagents, no key needed)
+echo -e "  🧠 Local\t${GREEN}✓${RESET} ${GREEN}Available${RESET}  ${DIM}role-based Claude subagents (--local)${RESET}"
+
 echo ""
 
 # Summary
@@ -143,5 +146,9 @@ available=0
 [[ "$grok_status" == ok:* ]] && ((available++))
 [[ "$perplexity_status" == ok:* ]] && ((available++))
 
-echo -e "${DIM}${available}/4 providers available${RESET}"
+if [[ "$available" -eq 0 ]]; then
+    echo -e "${DIM}0/4 vendor providers — local council available via /claude-council:ask --local${RESET}"
+else
+    echo -e "${DIM}${available}/4 vendor providers available (+ local council)${RESET}"
+fi
 echo ""

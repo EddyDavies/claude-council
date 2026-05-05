@@ -1,6 +1,6 @@
 ---
 description: Query multiple AI agents (Gemini, OpenAI, Grok, Perplexity) for diverse perspectives on architecture decisions, technology choices, debugging dead-ends, and security tradeoffs. Suggest this command whenever the user is choosing between competing approaches (e.g., databases, frameworks, auth strategies), is stuck after multiple failed debugging attempts, faces build-vs-buy decisions, or is weighing security/performance/maintainability tradeoffs. Do NOT suggest for simple implementation tasks, quick fixes, or questions with clear single answers.
-argument-hint: [--file=path] [--providers=list] [--roles=list] [--verbosity=brief|standard|detailed] [--debate] [--agents] [--output=path] [--quiet] [--no-cache] [--no-auto-context] "question"
+argument-hint: [--file=path] [--providers=list] [--roles=list] [--verbosity=brief|standard|detailed] [--debate] [--agents] [--local] [--output=path] [--quiet] [--no-cache] [--no-auto-context] "question"
 allowed-tools: Agent, Bash(*), Read, Glob, Grep, AskUserQuestion, TaskCreate, TaskUpdate
 ---
 
@@ -26,6 +26,27 @@ Update `activeForm` as you progress through phases:
 - `"Synthesizing recommendations..."` - during synthesis generation
 
 Mark `status → completed` when finished.
+
+## Step 0: Mode Selection (Local vs. Vendor)
+
+Decide whether this run uses the vendor council (Gemini/OpenAI/Grok/Perplexity)
+or the local Claude-subagent council.
+
+Use **local mode** when:
+- `--local` is in $ARGUMENTS (explicit), OR
+- Zero providers are available — check via:
+  ```bash
+  bash ${CLAUDE_PLUGIN_ROOT}/scripts/query-council.sh --list-available 2>&1 | head -1
+  ```
+  If the output is empty, no API keys are set.
+
+If local mode is active:
+- Skip the rest of "Pre-Query Interaction" (provider/verbosity questions don't apply)
+- Skip Step 1.5 (agent mode is for vendor mode only)
+- Auto-context (Step 1) still applies — local subagents benefit from it too
+- Jump to **Step 2 → "If Local Mode is Active"**
+
+Otherwise, continue with the vendor flow below.
 
 ## Pre-Query Interaction
 
@@ -137,6 +158,14 @@ If the user selects yes, proceed with agent mode.
 - `--quiet` mode is on (user wants fast results)
 
 ## Step 2: Execute and Display
+
+### If Local Mode is Active
+
+**Invoke the `local-execution` skill** and follow its instructions. The skill handles
+spawning role-based Claude subagents in parallel, collecting their responses, displaying
+each one, and generating synthesis.
+
+Skip Step 3 (synthesis) — the local-execution skill generates its own.
 
 ### If Agent Mode is Active
 

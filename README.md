@@ -8,6 +8,7 @@ A Claude Code plugin that consults multiple AI coding agents to get diverse pers
 - Side-by-side comparison of responses
 - Extensible provider system - add new AI agents easily
 - Proactive suggestions for architecture decisions and debugging
+- Local fallback — role-based council via Claude subagents when no vendor keys are set
 
 ## Installation
 
@@ -188,6 +189,7 @@ Per-call opt-out via `--no-pane`. iTerm2 features no-op silently outside iTerm2;
 | `--output=path` | Export response to markdown file |
 | `--quiet` | Show only synthesis, hide individual responses |
 | `--agents` | Agent-enhanced analysis with subagents (slower, deeper) |
+| `--local` | Local council — role-based Claude subagents, no vendor keys required (auto-enabled when no keys are set) |
 | `--no-cache` | Force fresh queries, skip cache |
 | `--no-auto-context` | Disable automatic file detection |
 | `--no-pane` | Disable streaming tmux pane (default: on inside tmux) |
@@ -210,6 +212,10 @@ Per-call opt-out via `--no-pane`. iTerm2 features no-op silently outside iTerm2;
 
 # Quiet mode - show only synthesis
 /claude-council:ask --quiet "What's the best caching strategy?"
+
+# Local council — no vendor API keys needed (uses Claude subagents with different roles)
+/claude-council:ask --local "Should I use JWT or session auth?"
+/claude-council:ask --local --roles=security,devil,simplicity "Review this design"
 
 # Check connectivity and configured models for each provider
 /claude-council:status

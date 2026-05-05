@@ -17,28 +17,44 @@ default fallback so users can try the plugin before wiring up paid keys.
 
 ## Step 1: Determine Roles
 
-Pick the role set, in this priority order:
+### Pick the roles config
 
-1. If `--roles` was specified on the slash command, use it (preset name like
-   `balanced` or comma list like `security,devil,simplicity`).
-2. Otherwise default to the `balanced` preset:
-   `security`, `performance`, `maintainability`.
-
-Read role config:
+If `--domain=NAME` was passed (e.g. `--domain=research`), use
+`${CLAUDE_PLUGIN_ROOT}/config/roles-${NAME}.json`. Otherwise default to
+`${CLAUDE_PLUGIN_ROOT}/config/roles.json` (software roles).
 
 ```bash
+# Default
 ROLES_JSON="${CLAUDE_PLUGIN_ROOT}/config/roles.json"
+
+# Or with --domain=research
+ROLES_JSON="${CLAUDE_PLUGIN_ROOT}/config/roles-research.json"
 ```
 
-For each role, extract the display name and prompt:
+If the chosen file doesn't exist, error out and tell the user which domain
+files are available:
+
+```bash
+ls "${CLAUDE_PLUGIN_ROOT}/config/" | grep -E '^roles(-.*)?\.json$'
+```
+
+### Pick the role set
+
+Priority order:
+
+1. If `--roles` was specified, use it (preset name or comma list).
+2. Otherwise default to the `balanced` preset (defined per domain — for
+   software it's `security,performance,maintainability`; for research it's
+   `steelman,evidence-auditor,audience-loss`).
+
+For each role, extract display name and prompt:
 
 ```bash
 jq -r --arg r "<role>" '.roles[$r].name' "$ROLES_JSON"
 jq -r --arg r "<role>" '.roles[$r].prompt' "$ROLES_JSON"
 ```
 
-If the user passed a preset name (one of `balanced`, `security-focused`,
-`architecture`, `review`), expand it via `.presets[$name]`.
+If a preset name was passed, expand it via `.presets[$name]`.
 
 ## Step 2: Spawn Role Agents in Parallel
 

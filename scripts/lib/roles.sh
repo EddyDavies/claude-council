@@ -5,7 +5,12 @@
 set -euo pipefail
 
 ROLES_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROLES_CONFIG="${ROLES_SCRIPT_DIR}/../../config/roles.json"
+
+# Resolve roles config:
+#   1. COUNCIL_ROLES_CONFIG (explicit path) wins
+#   2. COUNCIL_DOMAIN selects config/roles-${domain}.json (e.g. research)
+#   3. Default: config/roles.json (software roles)
+ROLES_CONFIG="${COUNCIL_ROLES_CONFIG:-${ROLES_SCRIPT_DIR}/../../config/roles${COUNCIL_DOMAIN:+-${COUNCIL_DOMAIN}}.json}"
 
 # Check if roles config exists
 roles_config_exists() {

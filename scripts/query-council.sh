@@ -130,6 +130,14 @@ while [[ $# -gt 0 ]]; do
             LIST_ROLES=true
             shift
             ;;
+        --domain=*)
+            export COUNCIL_DOMAIN="${1#*=}"
+            shift
+            ;;
+        --domain)
+            export COUNCIL_DOMAIN="$2"
+            shift 2
+            ;;
         --prompt=*)
             PROMPT="${1#*=}"
             shift
@@ -162,6 +170,10 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
+
+# Re-resolve roles config now that --domain may have been parsed
+# (roles.sh sourced before arg parse, so its initial value is stale)
+ROLES_CONFIG="${COUNCIL_ROLES_CONFIG:-${SCRIPT_DIR}/../config/roles${COUNCIL_DOMAIN:+-${COUNCIL_DOMAIN}}.json}"
 
 # Handle --list-available flag
 if [[ "$LIST_AVAILABLE" == true ]]; then

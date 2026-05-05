@@ -190,6 +190,7 @@ Per-call opt-out via `--no-pane`. iTerm2 features no-op silently outside iTerm2;
 | `--quiet` | Show only synthesis, hide individual responses |
 | `--agents` | Agent-enhanced analysis with subagents (slower, deeper) |
 | `--local` | Local council — role-based Claude subagents, no vendor keys required (auto-enabled when no keys are set) |
+| `--domain=NAME` | Swap roles config (e.g. `--domain=research` for editorial/political analysis instead of the software default) |
 | `--no-cache` | Force fresh queries, skip cache |
 | `--no-auto-context` | Disable automatic file detection |
 | `--no-pane` | Disable streaming tmux pane (default: on inside tmux) |
@@ -216,6 +217,10 @@ Per-call opt-out via `--no-pane`. iTerm2 features no-op silently outside iTerm2;
 # Local council — no vendor API keys needed (uses Claude subagents with different roles)
 /claude-council:ask --local "Should I use JWT or session auth?"
 /claude-council:ask --local --roles=security,devil,simplicity "Review this design"
+
+# Non-software domains — swap the roles config
+/claude-council:ask --local --domain=research "Critique this manifesto draft"
+/claude-council:ask --local --domain=research --roles=debate "Steelman the opposition"
 
 # Check connectivity and configured models for each provider
 /claude-council:status

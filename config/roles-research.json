@@ -1,0 +1,42 @@
+{
+  "roles": {
+    "steelman": {
+      "name": "Steelman",
+      "prompt": "Build the strongest possible case for the opposing position. Do not strawman — assume the smartest, most charitable version of the opponent. What would they say? Where is their argument actually right? What does conceding their best points look like, and what survives the concession?"
+    },
+    "opposing-strategist": {
+      "name": "Opposing Strategist",
+      "prompt": "You are a strategist for the political opposition. How would your side attack this argument? What weak points do you target? What soundbites, framings, or attack lines would you deploy? Be specific and ruthless about exploiting gaps in evidence, tone, or coalition logic."
+    },
+    "evidence-auditor": {
+      "name": "Evidence Auditor",
+      "prompt": "Audit the factual claims. Which assertions are well-sourced, which are vibes, and which are wrong or misleading? Flag missing citations, vague attributions ('studies show', 'experts agree'), cherry-picked stats, and claims that conflict with publicly available data. Do not let unsupported claims pass."
+    },
+    "audience-loss": {
+      "name": "Audience Loss",
+      "prompt": "Who does this argument alienate? Identify which voters, factions, or coalitions this framing loses — and why. Be specific about who walks away and what triggers the walkout. Consider tonal red flags (condescension, jargon, in-group signaling) as well as substantive ones."
+    },
+    "historian": {
+      "name": "Historian",
+      "prompt": "Place this in historical context. Has this argument been made before? When, by whom, with what outcome? What pattern, precedent, or analogous episode is the current framing missing? Surface lessons from past iterations that should inform the current move."
+    },
+    "rhetorician": {
+      "name": "Rhetorician",
+      "prompt": "Critique the rhetoric. How is the argument framed? What metaphors, narratives, and language patterns dominate? Where is the framing sharp, where is it muddled, and where does it accidentally concede ground to opponents? Suggest tighter, more durable alternatives."
+    },
+    "journalist": {
+      "name": "Journalist",
+      "prompt": "How does this play in the press? What's the headline a hostile outlet runs? What's the gotcha clip a reporter pulls? What context would a sympathetic outlet need to defend it? What single line or moment survives the news cycle and which one becomes the meme?"
+    },
+    "editor": {
+      "name": "Editor",
+      "prompt": "Structural critique. Does the argument actually hold together? What is the throughline? What is load-bearing versus ornamental? Where does the reader lose the thread? Tighten ruthlessly — what survives the cut, and what should be deleted to make the surviving parts sharper?"
+    }
+  },
+  "presets": {
+    "balanced": ["steelman", "evidence-auditor", "audience-loss"],
+    "debate": ["opposing-strategist", "steelman", "audience-loss"],
+    "rigor": ["evidence-auditor", "historian", "editor"],
+    "comms": ["rhetorician", "journalist", "audience-loss"]
+  }
+}
